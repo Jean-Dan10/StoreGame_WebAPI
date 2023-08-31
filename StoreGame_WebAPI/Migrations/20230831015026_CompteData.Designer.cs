@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StoreGame_WebAPI.Data;
 
@@ -10,9 +11,11 @@ using StoreGame_WebAPI.Data;
 namespace StoreGame_WebAPI.Migrations
 {
     [DbContext(typeof(GameContext))]
-    partial class GameContextModelSnapshot : ModelSnapshot
+    [Migration("20230831015026_CompteData")]
+    partial class CompteData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,6 +123,10 @@ namespace StoreGame_WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CompteUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Nom")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -128,53 +135,11 @@ namespace StoreGame_WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("User")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("IdClient");
 
-                    b.HasIndex("User");
+                    b.HasIndex("CompteUser");
 
                     b.ToTable("Client");
-
-                    b.HasData(
-                        new
-                        {
-                            IdClient = 1,
-                            AdresseCourriel = "",
-                            AdressePhysique = "",
-                            Nom = "admin",
-                            Prenom = "admin",
-                            User = "admin"
-                        },
-                        new
-                        {
-                            IdClient = 2,
-                            AdresseCourriel = "Tyzral@gmail.com",
-                            AdressePhysique = "5150 rues des ormes",
-                            Nom = "Beaudry",
-                            Prenom = "Simon",
-                            User = "Tyzral"
-                        },
-                        new
-                        {
-                            IdClient = 3,
-                            AdresseCourriel = "Grimworld@gmail.com",
-                            AdressePhysique = "221B Baker Street",
-                            Nom = "Mercier",
-                            Prenom = "Francis",
-                            User = "Grimworld"
-                        },
-                        new
-                        {
-                            IdClient = 4,
-                            AdresseCourriel = "ami@gmail.com",
-                            AdressePhysique = "50 rue l'Amitié",
-                            Nom = "Ami",
-                            Prenom = "Ami",
-                            User = "THEFRIEND"
-                        });
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.entities.Commande", b =>
@@ -260,58 +225,6 @@ namespace StoreGame_WebAPI.Migrations
                     b.HasKey("IdGenre");
 
                     b.ToTable("Genre");
-
-                    b.HasData(
-                        new
-                        {
-                            IdGenre = 1,
-                            Name = "Action-aventure"
-                        },
-                        new
-                        {
-                            IdGenre = 2,
-                            Name = "Plateforme"
-                        },
-                        new
-                        {
-                            IdGenre = 3,
-                            Name = "RPG"
-                        },
-                        new
-                        {
-                            IdGenre = 4,
-                            Name = "Sandbox"
-                        },
-                        new
-                        {
-                            IdGenre = 5,
-                            Name = "FPS"
-                        },
-                        new
-                        {
-                            IdGenre = 6,
-                            Name = "Strategy"
-                        },
-                        new
-                        {
-                            IdGenre = 7,
-                            Name = "Sports"
-                        },
-                        new
-                        {
-                            IdGenre = 8,
-                            Name = "Simulation"
-                        },
-                        new
-                        {
-                            IdGenre = 9,
-                            Name = "Puzzle"
-                        },
-                        new
-                        {
-                            IdGenre = 10,
-                            Name = "Horror"
-                        });
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.entities.Jeu", b =>
@@ -412,7 +325,7 @@ namespace StoreGame_WebAPI.Migrations
                 {
                     b.HasOne("StoreGame_WebAPI.entities.Compte", "Compte")
                         .WithMany()
-                        .HasForeignKey("User")
+                        .HasForeignKey("CompteUser")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

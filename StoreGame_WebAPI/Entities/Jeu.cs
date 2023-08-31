@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using StoreGame_WebAPI.Entities;
 
 namespace StoreGame_WebAPI.entities
 {
@@ -21,6 +22,8 @@ namespace StoreGame_WebAPI.entities
         public string ImagePath { get; set; }
 
         public List<Commande> Commandes { get; set; } = new List<Commande>();
+
+        public List<Wishlist> Whislists { get; set; } = new List<Wishlist>();
 
         public Jeu()
         {

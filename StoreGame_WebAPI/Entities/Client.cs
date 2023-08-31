@@ -17,6 +17,8 @@ namespace StoreGame_WebAPI.entities
         public string AdressePhysique { get; set; }
         public string AdresseCourriel { get; set; }
 
+        [ForeignKey("Compte")]
+        public string User { get; set; }
         public Compte Compte { get; set; }
 
     }

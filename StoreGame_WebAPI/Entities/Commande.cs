@@ -13,7 +13,7 @@ namespace StoreGame_WebAPI.entities
         public int IdCommande { get; set; }
 
         [ForeignKey("Compte")]
-        public int IdCompte { get; set; }
+        public string User { get; set; }
         public Compte Compte { get; set; }
 
         public List<Jeu> Jeux { get; set; } = new List<Jeu>();

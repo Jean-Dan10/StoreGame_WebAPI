@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using StoreGame_WebAPI.Entities;
 
 namespace StoreGame_WebAPI.entities
 {
     [Table("Compte")]
     public class Compte
     {
-        [Key]
-        public int IdCompte { get; set; }
-
-        
+        [Key]     
         public string User { get; set; }
 
        
@@ -18,7 +16,9 @@ namespace StoreGame_WebAPI.entities
        
         public string ProfileName { get; set; }
 
-        public List<Commande> Commandes { get; set; } = new List<Commande>(); 
+        public List<Commande> Commandes { get; set; } = new List<Commande>();
+
+        public Wishlist Wishlist { get; set; }
 
         public Compte()
         {
@@ -66,7 +66,7 @@ namespace StoreGame_WebAPI.entities
 
         public override string ToString()
         {
-            return $"Compte{{ IdCompte={IdCompte}, User='{User}', Password='{Password}', ProfileName='{ProfileName}', Commandes={Commandes} }}";
+            return $"Compte{{  User='{User}', Password='{Password}', ProfileName='{ProfileName}', Commandes={Commandes} }}";
         }
     }
 
