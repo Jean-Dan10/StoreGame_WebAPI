@@ -4,6 +4,7 @@ using StoreGame_WebAPI.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// Pour configurer le gameContext et la connexion à localDB
 builder.Services.AddDbContext<GameContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("GameContext")));
 
