@@ -13,11 +13,11 @@ namespace StoreGame_WebAPI.Entities
 
         [ForeignKey("Compte")]
         public string User { get; set; }
-        public Compte Compte { get; set; }
+        public Compte? Compte { get; set; }
 
         [ForeignKey("Jeu")]
         public int IdJeu { get; set; }
-        public Jeu Jeu { get; set; } 
+        public Jeu? Jeu { get; set; } 
         public string Commentaire { get; set; }
         public int Note {get; set; }
 
