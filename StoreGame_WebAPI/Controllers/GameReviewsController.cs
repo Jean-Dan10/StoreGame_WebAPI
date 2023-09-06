@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using StoreGame_WebAPI.Data;
 using StoreGame_WebAPI.Entities;
@@ -116,9 +117,38 @@ namespace StoreGame_WebAPI.Controllers
             return NoContent();
         }
 
+
+        //GET: api/GameReviews/Game/5
+
+        [HttpGet("Game/{id}")]
+        public async Task<ActionResult<IEnumerable<GameReview>>> GetGameReviewByGame(int id)
+        {
+
+           
+
+            if (_context.GameReviews == null)
+            {
+                return NotFound();
+            }
+            var gameReviews = await _context.GameReviews
+                .FromSqlRaw("GetGameReviewsByGameId @idJeu", new SqlParameter("@idJeu", id))
+                .ToListAsync();
+               
+
+            if (gameReviews == null || gameReviews.Count == 0)
+            {
+                return NotFound("Aucun gameReview pour le jeu"+ id);
+            }
+
+            return gameReviews;
+        }
+
         private bool GameReviewExists(int id)
         {
             return (_context.GameReviews?.Any(e => e.IdReview == id)).GetValueOrDefault();
         }
+
+
+
     }
 }

@@ -15,7 +15,6 @@ namespace StoreGame_WebAPI.Data
         public DbSet<Compte> Comptes { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Jeu> Jeux { get; set; }
-
         public DbSet<GameReview> GameReviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
