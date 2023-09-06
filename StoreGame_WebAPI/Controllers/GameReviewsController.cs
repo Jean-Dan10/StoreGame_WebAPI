@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -121,7 +122,7 @@ namespace StoreGame_WebAPI.Controllers
         //GET: api/GameReviews/Game/5
 
         [HttpGet("Game/{id}")]
-        public async Task<ActionResult<IEnumerable<GameReview>>> GetGameReviewByGame(int id)
+        public async Task<ActionResult<IEnumerable<object>>> GetGameReviewByGame(int id)
         {
 
            
@@ -132,7 +133,14 @@ namespace StoreGame_WebAPI.Controllers
             }
             var gameReviews = await _context.GameReviews
                 .FromSqlRaw("GetGameReviewsByGameId @idJeu", new SqlParameter("@idJeu", id))
-                .ToListAsync();
+               .ToListAsync();
+
+            foreach( var gameReview in gameReviews)
+            {
+                _context.Entry(gameReview)
+                    .Reference(r => r.Jeu)
+                    .Load();
+            }
                
 
             if (gameReviews == null || gameReviews.Count == 0)
@@ -140,7 +148,16 @@ namespace StoreGame_WebAPI.Controllers
                 return NotFound("Aucun gameReview pour le jeu"+ id);
             }
 
-            return gameReviews;
+            var result = gameReviews.Select(r => new
+            {
+                r.IdReview,
+                r.User,
+                r.Commentaire,
+                r.Note,
+                NomJeu = r.Jeu?.NomJeu 
+            }).ToList();
+
+            return result;
         }
 
         private bool GameReviewExists(int id)
