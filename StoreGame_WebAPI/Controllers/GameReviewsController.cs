@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using StoreGame_WebAPI.Data;
+using StoreGame_WebAPI.DTO;
 using StoreGame_WebAPI.Entities;
 
 namespace StoreGame_WebAPI.Controllers
@@ -158,6 +159,21 @@ namespace StoreGame_WebAPI.Controllers
             }).ToList();
 
             return result;
+        }
+
+        //GET: api/GameReviews/Average/5
+        [HttpGet("Average/{id}")]
+        public IActionResult GetAverageReview(int id)
+        {
+            var averageScore = _context.Set<AverageScoreResult>()
+                .FromSqlRaw("GetGameReviewsAvgByGame @idJeu", new SqlParameter("@idJeu", id));
+
+            if (averageScore == null)
+            {
+                return NotFound("Aucun gameReview pour le jeu " + id);
+            }
+
+            return Ok(averageScore);
         }
 
         private bool GameReviewExists(int id)

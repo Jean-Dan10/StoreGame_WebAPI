@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StoreGame_WebAPI.Data;
 
@@ -10,9 +11,11 @@ using StoreGame_WebAPI.Data;
 namespace StoreGame_WebAPI.Migrations
 {
     [DbContext(typeof(GameContext))]
-    partial class GameContextModelSnapshot : ModelSnapshot
+    [Migration("20230906190505_dummyEntittyScoreResult")]
+    partial class dummyEntittyScoreResult
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,12 +54,15 @@ namespace StoreGame_WebAPI.Migrations
                     b.ToTable("JeuWishlist");
                 });
 
-            modelBuilder.Entity("StoreGame_WebAPI.DTO.AverageScoreResult", b =>
+            modelBuilder.Entity("StoreGame_WebAPI.DTO.GameReviewAverageDTO", b =>
                 {
+                    b.Property<int>("IdJeu")
+                        .HasColumnType("int");
+
                     b.Property<double>("MoyenneNote")
                         .HasColumnType("float");
 
-                    b.ToTable("AverageScoreResult");
+                    b.ToTable("GameReviewAverageDTO");
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.Entities.GameReview", b =>

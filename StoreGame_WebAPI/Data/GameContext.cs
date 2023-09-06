@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StoreGame_WebAPI.DTO;
 using StoreGame_WebAPI.entities;
 using StoreGame_WebAPI.Entities;
 
@@ -17,6 +18,8 @@ namespace StoreGame_WebAPI.Data
         public DbSet<Jeu> Jeux { get; set; }
         public DbSet<GameReview> GameReviews { get; set; }
 
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // pour ajouter une contrainte unique de user et jeu. Donc seulement 1 review par jeu par user
@@ -25,10 +28,13 @@ namespace StoreGame_WebAPI.Data
                 .IsUnique();
 
             InitData(modelBuilder);
-             
+
+            modelBuilder.Entity<AverageScoreResult>().HasNoKey();
+
+
         }
 
-        private void InitData(ModelBuilder modelBuilder)
+                private void InitData(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Compte>().HasData(
                 new Compte { User = "admin", Password = "123", ProfileName = "Orignal" },
