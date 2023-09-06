@@ -166,14 +166,22 @@ namespace StoreGame_WebAPI.Controllers
         public IActionResult GetAverageReview(int id)
         {
             var averageScore = _context.Set<AverageScoreResult>()
-                .FromSqlRaw("GetGameReviewsAvgByGame @idJeu", new SqlParameter("@idJeu", id));
+                .FromSqlRaw("GetGameReviewsAvgByGame @idJeu", new SqlParameter("@idJeu", id))
+                .AsEnumerable()
+                .SingleOrDefault();
 
             if (averageScore == null)
             {
                 return NotFound("Aucun gameReview pour le jeu " + id);
             }
 
-            return Ok(averageScore);
+            GameReviewAverageDTO game = new GameReviewAverageDTO
+            {
+                MoyenneNote = Convert.ToDouble(averageScore.MoyenneNote),
+                IdJeu = id
+            };
+
+            return Ok(game);
         }
 
         private bool GameReviewExists(int id)
