@@ -178,7 +178,8 @@ namespace StoreGame_WebAPI.Controllers
             GameReviewAverageDTO game = new GameReviewAverageDTO
             {
                 MoyenneNote = Convert.ToDouble(averageScore.MoyenneNote),
-                IdJeu = id
+                IdJeu = id,
+                Nom = _context.Jeux.Find(id).NomJeu
             };
 
             return Ok(game);
