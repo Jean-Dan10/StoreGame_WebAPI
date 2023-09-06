@@ -1,8 +1,8 @@
-﻿namespace StoreGame_WebAPI.Dummy_entity
+﻿namespace StoreGame_WebAPI.DTO
 {
     public class AverageReviewForEachGame
     {
-        public  int IdJeu { get; set; }
+        public int IdJeu { get; set; }
         public double MoyenneNote { get; set; }
     }
 }

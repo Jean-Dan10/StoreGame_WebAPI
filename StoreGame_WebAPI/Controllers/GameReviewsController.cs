@@ -9,7 +9,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using StoreGame_WebAPI.Data;
 using StoreGame_WebAPI.DTO;
-using StoreGame_WebAPI.Dummy_entity;
 using StoreGame_WebAPI.Entities;
 
 namespace StoreGame_WebAPI.Controllers
