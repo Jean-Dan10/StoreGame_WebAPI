@@ -9,6 +9,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using StoreGame_WebAPI.Data;
 using StoreGame_WebAPI.DTO;
+using StoreGame_WebAPI.Dummy_entity;
 using StoreGame_WebAPI.Entities;
 
 namespace StoreGame_WebAPI.Controllers
@@ -184,6 +185,32 @@ namespace StoreGame_WebAPI.Controllers
 
             return Ok(game);
         }
+
+        //GET: api/GameReviews/Average
+        [HttpGet("Average")]
+        public async Task<ActionResult<List<GameReviewAverageDTO>>> GetAverageReviewForEachGame()
+        {
+            var averageScorelist = await _context.Set<AverageReviewForEachGame>()
+                .FromSqlRaw("GetAverageReviewForEachGame")
+                .ToListAsync();
+
+            if (averageScorelist == null || averageScorelist.Count == 0)
+            {
+                return NotFound("No game reviews found.");
+            }
+
+
+            var gameReviewDTOs = averageScorelist.Select(averageScore => new GameReviewAverageDTO
+            {
+                IdJeu = averageScore.IdJeu,
+                MoyenneNote = Convert.ToDouble(averageScore.MoyenneNote),
+                Nom = _context.Jeux.Find(averageScore.IdJeu).NomJeu 
+            }).ToList();
+
+            return Ok(gameReviewDTOs);
+        }
+
+  
 
         private bool GameReviewExists(int id)
         {
