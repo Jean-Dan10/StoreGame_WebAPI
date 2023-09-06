@@ -18,6 +18,8 @@ namespace StoreGame_WebAPI.Data
 
         public DbSet<GameReview> GameReviews { get; set; }
 
+        public DbSet<Wishlist> Wishlists { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // pour ajouter une contrainte unique de user et jeu. Donc seulement 1 review par jeu par user
@@ -361,6 +363,8 @@ namespace StoreGame_WebAPI.Data
             );
 
         }
+
+        public DbSet<StoreGame_WebAPI.Entities.Wishlist>? Wishlist { get; set; }
     }
 
 
