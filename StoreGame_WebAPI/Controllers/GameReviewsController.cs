@@ -9,6 +9,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using StoreGame_WebAPI.Data;
 using StoreGame_WebAPI.DTO;
+using StoreGame_WebAPI.entities;
 using StoreGame_WebAPI.Entities;
 
 namespace StoreGame_WebAPI.Controllers
@@ -32,7 +33,26 @@ namespace StoreGame_WebAPI.Controllers
           {
               return NotFound();
           }
-            return await _context.GameReviews.ToListAsync();
+
+          var gamereviews = await _context.GameReviews
+                .Include(gr=> gr.Jeu)
+                .Select(gr => new GameReviewDTO
+                {
+                    User = gr.User,
+                    NomJeu = gr.Jeu.NomJeu, 
+                    Commentaire = gr.Commentaire,
+                    Note = gr.Note
+                })
+                .ToListAsync();
+
+            if (gamereviews == null || gamereviews.Count == 0)
+            {
+                return NotFound("Aucune revu de jeu");
+            }
+
+
+
+            return Ok(gamereviews);
         }
 
         // GET: api/GameReviews/5
@@ -43,11 +63,13 @@ namespace StoreGame_WebAPI.Controllers
           {
               return NotFound();
           }
-            var gameReview = await _context.GameReviews.FindAsync(id);
+            var gameReview = await _context.GameReviews
+                .Include(gr => gr.Jeu) 
+                .FirstOrDefaultAsync(gr => gr.IdReview == id);
 
             if (gameReview == null)
             {
-                return NotFound();
+                return NotFound("Il n'y a aucun revu correspondant à l'id =>"+id);
             }
 
             return gameReview;
@@ -134,13 +156,12 @@ namespace StoreGame_WebAPI.Controllers
                 return NotFound("Aucun gameReview pour le jeu " + id);
             }
 
-            var gameReviewDTOs = new List<GameReviewsWithGameNameDTO>();
+            var gameReviewDTOs = new List<GameReviewDTO>();
 
             foreach (var gameReview in gameReviews) {
-                var review = new GameReviewsWithGameNameDTO
+                var review = new GameReviewDTO
                 {
                     User = gameReview.User,
-                    IdJeu = gameReview.IdJeu,
                     NomJeu = _context.Jeux.Find(id).NomJeu,
                     Commentaire = gameReview.Commentaire,
                     Note = gameReview.Note

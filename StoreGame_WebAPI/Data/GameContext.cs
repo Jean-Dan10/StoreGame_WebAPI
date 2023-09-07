@@ -33,7 +33,6 @@ namespace StoreGame_WebAPI.Data
 
             modelBuilder.Entity<AverageReviewForEachGame>().HasNoKey();
 
-            
 
         }
 
