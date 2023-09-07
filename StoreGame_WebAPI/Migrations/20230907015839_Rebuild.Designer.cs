@@ -11,8 +11,8 @@ using StoreGame_WebAPI.Data;
 namespace StoreGame_WebAPI.Migrations
 {
     [DbContext(typeof(GameContext))]
-    [Migration("20230901161003_AddDataJeux")]
-    partial class AddDataJeux
+    [Migration("20230907015839_Rebuild")]
+    partial class Rebuild
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,6 +52,25 @@ namespace StoreGame_WebAPI.Migrations
                     b.HasIndex("WhislistsId");
 
                     b.ToTable("JeuWishlist");
+                });
+
+            modelBuilder.Entity("StoreGame_WebAPI.DTO.AverageReviewForEachGame", b =>
+                {
+                    b.Property<int>("IdJeu")
+                        .HasColumnType("int");
+
+                    b.Property<double>("MoyenneNote")
+                        .HasColumnType("float");
+
+                    b.ToTable("AverageReviewForEachGame");
+                });
+
+            modelBuilder.Entity("StoreGame_WebAPI.DTO.AverageScoreResult", b =>
+                {
+                    b.Property<double>("MoyenneNote")
+                        .HasColumnType("float");
+
+                    b.ToTable("AverageScoreResult");
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.Entities.GameReview", b =>
