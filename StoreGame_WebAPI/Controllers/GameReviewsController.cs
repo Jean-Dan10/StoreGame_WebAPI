@@ -28,7 +28,7 @@ namespace StoreGame_WebAPI.Controllers
 
         // GET: api/GameReviews
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GameReview>>> GetGameReviews()
+        public async Task<ActionResult<IEnumerable<GameReviewDTO>>> GetGameReviews()
         {
           if (_context.GameReviews == null)
           {
@@ -39,6 +39,7 @@ namespace StoreGame_WebAPI.Controllers
                 .Include(gr=> gr.Jeu)
                 .Select(gr => new GameReviewDTO
                 {
+                    IdReview = gr.IdReview,
                     User = gr.User,
                     NomJeu = gr.Jeu.NomJeu, 
                     Commentaire = gr.Commentaire,
@@ -58,7 +59,7 @@ namespace StoreGame_WebAPI.Controllers
 
         // GET: api/GameReviews/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<GameReview>> GetGameReview(int id)
+        public async Task<ActionResult<GameReviewDTO>> GetGameReview(int id)
         {
           if (_context.GameReviews == null)
           {
@@ -66,6 +67,14 @@ namespace StoreGame_WebAPI.Controllers
           }
             var gameReview = await _context.GameReviews
                 .Include(gr => gr.Jeu) 
+                    .Select(gr => new GameReviewDTO
+                {
+                    IdReview= gr.IdReview,
+                    User = gr.User,
+                    NomJeu = gr.Jeu.NomJeu, 
+                    Commentaire = gr.Commentaire,
+                    Note = gr.Note
+                })
                 .FirstOrDefaultAsync(gr => gr.IdReview == id);
 
             if (gameReview == null)

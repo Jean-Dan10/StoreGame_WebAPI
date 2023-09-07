@@ -1,4 +1,4 @@
-﻿namespace StoreGame_WebAPI.DTO
+﻿namespace StoreGame_WebAPI.DTO.classIntermediaire
 {
     public class AverageReviewForEachGame
     {
