@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StoreGame_WebAPI.DTO;
+using StoreGame_WebAPI.DTO.classIntermediaire;
 using StoreGame_WebAPI.entities;
 using StoreGame_WebAPI.Entities;
 
@@ -32,6 +32,7 @@ namespace StoreGame_WebAPI.Data
             modelBuilder.Entity<AverageScoreResult>().HasNoKey();
 
             modelBuilder.Entity<AverageReviewForEachGame>().HasNoKey();
+
 
 
         }
