@@ -123,42 +123,32 @@ namespace StoreGame_WebAPI.Controllers
         //GET: api/GameReviews/Game/5
 
         [HttpGet("Game/{id}")]
-        public async Task<ActionResult<IEnumerable<object>>> GetGameReviewByGame(int id)
+        public async Task<ActionResult<IEnumerable<GameReviewsWithGameNameDTO>>> GetGameReviewByGame(int id)
         {
-
-           
-
-            if (_context.GameReviews == null)
-            {
-                return NotFound();
-            }
             var gameReviews = await _context.GameReviews
                 .FromSqlRaw("GetGameReviewsByGameId @idJeu", new SqlParameter("@idJeu", id))
-               .ToListAsync();
-
-            foreach( var gameReview in gameReviews)
-            {
-                _context.Entry(gameReview)
-                    .Reference(r => r.Jeu)
-                    .Load();
-            }
-               
+                .ToListAsync();
 
             if (gameReviews == null || gameReviews.Count == 0)
             {
-                return NotFound("Aucun gameReview pour le jeu"+ id);
+                return NotFound("Aucun gameReview pour le jeu " + id);
             }
 
-            var result = gameReviews.Select(r => new
-            {
-                r.IdReview,
-                r.User,
-                r.Commentaire,
-                r.Note,
-                NomJeu = r.Jeu?.NomJeu 
-            }).ToList();
+            var gameReviewDTOs = new List<GameReviewsWithGameNameDTO>();
 
-            return result;
+            foreach (var gameReview in gameReviews) {
+                var review = new GameReviewsWithGameNameDTO
+                {
+                    User = gameReview.User,
+                    IdJeu = gameReview.IdJeu,
+                    NomJeu = _context.Jeux.Find(id).NomJeu,
+                    Commentaire = gameReview.Commentaire,
+                    Note = gameReview.Note
+                };
+                gameReviewDTOs.Add(review);
+            }
+
+            return Ok(gameReviewDTOs);
         }
 
         //GET: api/GameReviews/Average/5
