@@ -190,25 +190,6 @@ namespace StoreGame_WebAPI.Controllers
             }
         }
 
-        [HttpGet("test")]
-        public async Task<ActionResult> TestGetWishlist()
-        {
-            var wishlists = await _context.Wishlist
-                                          .Include(w => w.Jeux)
-                                          .FirstOrDefaultAsync();  // Récupère la première wishlist pour le test
-
-            if (wishlists != null)
-            {
-                Console.WriteLine($"Wishlist ID: {wishlists.Id}");
-                foreach (var jeu in wishlists.Jeux)
-                {
-                    Console.WriteLine($"Jeu: {jeu.NomJeu}");
-                }
-                return Ok(wishlists);
-            }
-            return NotFound();
-        }
-
 
         private bool WishlistExists(int id)
         {
