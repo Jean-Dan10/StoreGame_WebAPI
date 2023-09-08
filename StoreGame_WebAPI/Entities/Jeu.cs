@@ -18,8 +18,8 @@ namespace StoreGame_WebAPI.entities
         public int IdGenre { get; set; }
         public Genre? Genre { get; set; }
 
-        public string Description { get; set; }
-        public string ImagePath { get; set; }
+        public string? Description { get; set; }
+        public string? ImagePath { get; set; }
 
         public List<Commande> Commandes { get; set; } = new List<Commande>();
 

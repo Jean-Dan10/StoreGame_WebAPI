@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StoreGame_WebAPI.Data;
 
@@ -10,9 +11,11 @@ using StoreGame_WebAPI.Data;
 namespace StoreGame_WebAPI.Migrations
 {
     [DbContext(typeof(GameContext))]
-    partial class GameContextModelSnapshot : ModelSnapshot
+    [Migration("20230907014429_nouvelleEntiterCompteEtClient")]
+    partial class nouvelleEntiterCompteEtClient
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -195,7 +198,7 @@ namespace StoreGame_WebAPI.Migrations
                         },
                         new
                         {
-                            IdClient = 7,
+                            IdClient = 5,
                             AdresseCourriel = "ami2@gmail.com",
                             AdressePhysique = "44 rue l'Amitié",
                             Nom = "Le",

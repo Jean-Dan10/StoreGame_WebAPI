@@ -11,5 +11,6 @@ namespace StoreGame_WebAPI.Entities
         public Compte? Compte { get; set; }
         public List<Jeu> Jeux { get; set; } = new List<Jeu>();
 
+
     }
 }

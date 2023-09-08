@@ -19,6 +19,8 @@ namespace StoreGame_WebAPI.Data
         public DbSet<GameReview> GameReviews { get; set; }
 
         public DbSet<Wishlist> Wishlists { get; set; }
+        public DbSet<FavoriteGameStats> FavoriteGameStats { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,14 +39,18 @@ namespace StoreGame_WebAPI.Data
                 new Compte { User = "admin", Password = "123", ProfileName = "Orignal" },
                 new Compte { User = "Tyzral", Password = "123", ProfileName = "Tyzral" },
                 new Compte { User = "Grimworld", Password = "123", ProfileName = "Grimworld" },
-                new Compte { User = "THEFRIEND", Password = "123", ProfileName = "ami" }
+                new Compte { User = "THEFRIEND", Password = "123", ProfileName = "ami" },
+                new Compte { User = "Test1", Password = "123", ProfileName = "LeTest1" },
+                new Compte { User = "Test2", Password = "123", ProfileName = "LeTest2" }
             );
 
             modelBuilder.Entity<Client>().HasData(
                 new Client { IdClient = 1, Nom = "admin", Prenom = "admin", AdressePhysique = "", AdresseCourriel = "", User = "admin" },
                 new Client { IdClient = 2, Nom = "Beaudry", Prenom = "Simon", AdressePhysique = "5150 rues des ormes", AdresseCourriel = "Tyzral@gmail.com", User = "Tyzral" },
                 new Client { IdClient = 3, Nom = "Mercier", Prenom = "Francis", AdressePhysique = "221B Baker Street", AdresseCourriel = "Grimworld@gmail.com", User = "Grimworld" },
-                new Client { IdClient = 4, Nom = "Ami", Prenom = "Ami", AdressePhysique = "50 rue l'Amitié", AdresseCourriel = "ami@gmail.com", User = "THEFRIEND" }
+                new Client { IdClient = 4, Nom = "Ami", Prenom = "Ami", AdressePhysique = "50 rue l'Amitié", AdresseCourriel = "ami@gmail.com", User = "THEFRIEND" },
+                new Client { IdClient = 7, Nom = "Le", Prenom = "Test1", AdressePhysique = "44 rue l'Amitié", AdresseCourriel = "ami2@gmail.com", User = "Test1" },
+                new Client { IdClient = 6, Nom = "Le", Prenom = "Test2", AdressePhysique = "45 rue l'Amitié", AdresseCourriel = "ami3@gmail.com", User = "Test2" }
             );
 
             modelBuilder.Entity<Genre>().HasData(

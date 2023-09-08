@@ -29,6 +29,7 @@ namespace StoreGame_WebAPI.Controllers
           {
               return NotFound();
           }
+            
             return await _context.Comptes.ToListAsync();
         }
 
