@@ -11,8 +11,8 @@ using StoreGame_WebAPI.Data;
 namespace StoreGame_WebAPI.Migrations
 {
     [DbContext(typeof(GameContext))]
-    [Migration("20230901161003_AddDataJeux")]
-    partial class AddDataJeux
+    [Migration("20230907020014_AddDataGameReview")]
+    partial class AddDataGameReview
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,6 +54,25 @@ namespace StoreGame_WebAPI.Migrations
                     b.ToTable("JeuWishlist");
                 });
 
+            modelBuilder.Entity("StoreGame_WebAPI.DTO.AverageReviewForEachGame", b =>
+                {
+                    b.Property<int>("IdJeu")
+                        .HasColumnType("int");
+
+                    b.Property<double>("MoyenneNote")
+                        .HasColumnType("float");
+
+                    b.ToTable("AverageReviewForEachGame");
+                });
+
+            modelBuilder.Entity("StoreGame_WebAPI.DTO.AverageScoreResult", b =>
+                {
+                    b.Property<double>("MoyenneNote")
+                        .HasColumnType("float");
+
+                    b.ToTable("AverageScoreResult");
+                });
+
             modelBuilder.Entity("StoreGame_WebAPI.Entities.GameReview", b =>
                 {
                     b.Property<int>("IdReview")
@@ -84,6 +103,160 @@ namespace StoreGame_WebAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("GameReview");
+
+                    b.HasData(
+                        new
+                        {
+                            IdReview = 1,
+                            Commentaire = "Ce jeu est incroyable! Les graphismes sont à couper le souffle, et l'histoire est passionnante. J'adore!",
+                            IdJeu = 1,
+                            Note = 4,
+                            User = "admin"
+                        },
+                        new
+                        {
+                            IdReview = 2,
+                            Commentaire = "J'ai passé des heures à jouer à ce jeu. C'est vraiment addictif, et les personnages sont attachants.",
+                            IdJeu = 2,
+                            Note = 3,
+                            User = "admin"
+                        },
+                        new
+                        {
+                            IdReview = 3,
+                            Commentaire = "Ce jeu mérite 5 étoiles. La jouabilité est fluide, et les niveaux sont bien conçus.",
+                            IdJeu = 3,
+                            Note = 5,
+                            User = "admin"
+                        },
+                        new
+                        {
+                            IdReview = 4,
+                            Commentaire = "The Witcher 3 est un chef-d'œuvre absolu! L'univers est riche, les quêtes sont captivantes. Ma note : 5/5.",
+                            IdJeu = 4,
+                            Note = 5,
+                            User = "admin"
+                        },
+                        new
+                        {
+                            IdReview = 5,
+                            Commentaire = "Rayman Legends est un jeu de plateforme incroyablement amusant. Les niveaux musicaux sont géniaux! Note : 4/5.",
+                            IdJeu = 5,
+                            Note = 4,
+                            User = "admin"
+                        },
+                        new
+                        {
+                            IdReview = 6,
+                            Commentaire = "Assassin's Creed Origins est un voyage passionnant dans l'Égypte antique. Les combats sont géniaux. Note : 4/5.",
+                            IdJeu = 6,
+                            Note = 4,
+                            User = "admin"
+                        },
+                        new
+                        {
+                            IdReview = 7,
+                            Commentaire = "Terraria est un jeu de construction addictif. L'exploration est infinie! Ma note : 4/5.",
+                            IdJeu = 7,
+                            Note = 4,
+                            User = "admin"
+                        },
+                        new
+                        {
+                            IdReview = 8,
+                            Commentaire = "Final Fantasy XIV est un MMORPG de qualité avec une histoire épique. Je recommande! Note : 5/5.",
+                            IdJeu = 8,
+                            Note = 5,
+                            User = "admin"
+                        },
+                        new
+                        {
+                            IdReview = 9,
+                            Commentaire = "Celeste est un jeu de plateforme exigeant mais gratifiant. Les défis sont stimulants. Note : 4/5.",
+                            IdJeu = 9,
+                            Note = 4,
+                            User = "admin"
+                        },
+                        new
+                        {
+                            IdReview = 10,
+                            Commentaire = "Red Dead Redemption 2 est une expérience immersive dans le Far West. Les détails sont incroyables. Note : 5/5.",
+                            IdJeu = 10,
+                            Note = 5,
+                            User = "admin"
+                        },
+                        new
+                        {
+                            IdReview = 11,
+                            Commentaire = "Les graphismes de ce jeu sont correct, et l'intrigue est palpitante. Je lui donne 3 étoiles!",
+                            IdJeu = 1,
+                            Note = 3,
+                            User = "Grimworld"
+                        },
+                        new
+                        {
+                            IdReview = 12,
+                            Commentaire = "J'ai été accro à ce jeu pendant des semaines. Les personnages sont super attachants, et l'aventure est passionnante. Ma note : 4/5.",
+                            IdJeu = 2,
+                            Note = 4,
+                            User = "Grimworld"
+                        },
+                        new
+                        {
+                            IdReview = 13,
+                            Commentaire = "Ce jeu mérite toutes les éloges. La jouabilité est fluide, et chaque niveau est un plaisir à parcourir. Ma note : 5/5.",
+                            IdJeu = 3,
+                            Note = 5,
+                            User = "Grimworld"
+                        },
+                        new
+                        {
+                            IdReview = 14,
+                            Commentaire = "Super Mario Odyssey est un jeu incroyable! Les graphismes sont époustouflants, et le gameplay est une pure joie. Ma note : 5/5.",
+                            IdJeu = 1,
+                            Note = 5,
+                            User = "Tyzral"
+                        },
+                        new
+                        {
+                            IdReview = 15,
+                            Commentaire = "J'ai passé d'innombrables heures à explorer chaque royaume de ce jeu. C'est un chef-d'œuvre du genre. Note : 5/5.",
+                            IdJeu = 2,
+                            Note = 5,
+                            User = "Tyzral"
+                        },
+                        new
+                        {
+                            IdReview = 16,
+                            Commentaire = "Ce jeu est tellement amusant! Les niveaux sont bien conçus, et les défis sont stimulants. Ma note : 3/5.",
+                            IdJeu = 3,
+                            Note = 3,
+                            User = "Tyzral"
+                        },
+                        new
+                        {
+                            IdReview = 17,
+                            Commentaire = "Ce jeu est décevant. Les graphismes sont médiocres, et l'histoire est ennuyeuse. Ma note : 2/5.",
+                            IdJeu = 1,
+                            Note = 2,
+                            User = "THEFRIEND"
+                        },
+                        new
+                        {
+                            IdReview = 18,
+                            Commentaire = "The Legend of Zelda: Breath of the Wild est un jeu surévalué. Je ne vois pas ce que les gens lui trouvent. Note : 2/5.",
+                            IdJeu = 2,
+                            Note = 2,
+                            User = "THEFRIEND"
+                        },
+                        new
+                        {
+                            IdReview = 19,
+                            Commentaire = "Minecraft est un jeu sans intérêt. Construire des choses n'a rien d'amusant. Ma note : 2/5.",
+                            IdJeu = 3,
+                            Note = 2,
+                            User = "THEFRIEND"
+                        });
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.Entities.Wishlist", b =>
