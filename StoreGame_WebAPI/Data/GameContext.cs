@@ -20,7 +20,7 @@ namespace StoreGame_WebAPI.Data
 
         public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<FavoriteGameStats> FavoriteGameStats { get; set; }
-
+        public DbSet<JeuWishlist> jeuWishlists { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +28,21 @@ namespace StoreGame_WebAPI.Data
             modelBuilder.Entity<GameReview>()
                 .HasIndex(gr => new { gr.User, gr.IdJeu }) 
                 .IsUnique();
+
+            modelBuilder.Entity<JeuWishlist>()
+         .HasKey(jw => new { jw.JeuxIdJeu, jw.WishlistsId });
+
+            modelBuilder.Entity<JeuWishlist>()
+                .HasOne(jw => jw.Jeu)
+                .WithMany(j => j.JeuWishlists)
+                .HasForeignKey(jw => jw.JeuxIdJeu);
+
+            modelBuilder.Entity<JeuWishlist>()
+                .HasOne(jw => jw.Wishlist)
+                .WithMany(w => w.JeuWishlists)
+                .HasForeignKey(jw => jw.WishlistsId);
+
+
 
             InitData(modelBuilder);
              

@@ -5,22 +5,47 @@
 namespace StoreGame_WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class ReviwWishList2 : Migration
+    public partial class wishlist : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "JeuWishlist");
+
+            migrationBuilder.AddColumn<int>(
+                name: "JeuIdJeu",
+                table: "Wishlist",
+                type: "int",
+                nullable: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Wishlist_JeuIdJeu",
+                table: "Wishlist",
+                column: "JeuIdJeu");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Wishlist_Jeu_JeuIdJeu",
+                table: "Wishlist",
+                column: "JeuIdJeu",
+                principalTable: "Jeu",
+                principalColumn: "idJeu");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
             migrationBuilder.DropForeignKey(
-                name: "FK_Jeu_Wishlist_WishlistId",
-                table: "Jeu");
+                name: "FK_Wishlist_Jeu_JeuIdJeu",
+                table: "Wishlist");
 
             migrationBuilder.DropIndex(
-                name: "IX_Jeu_WishlistId",
-                table: "Jeu");
+                name: "IX_Wishlist_JeuIdJeu",
+                table: "Wishlist");
 
             migrationBuilder.DropColumn(
-                name: "WishlistId",
-                table: "Jeu");
+                name: "JeuIdJeu",
+                table: "Wishlist");
 
             migrationBuilder.CreateTable(
                 name: "JeuWishlist",
@@ -50,31 +75,6 @@ namespace StoreGame_WebAPI.Migrations
                 name: "IX_JeuWishlist_WhislistsId",
                 table: "JeuWishlist",
                 column: "WhislistsId");
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "JeuWishlist");
-
-            migrationBuilder.AddColumn<int>(
-                name: "WishlistId",
-                table: "Jeu",
-                type: "int",
-                nullable: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Jeu_WishlistId",
-                table: "Jeu",
-                column: "WishlistId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Jeu_Wishlist_WishlistId",
-                table: "Jeu",
-                column: "WishlistId",
-                principalTable: "Wishlist",
-                principalColumn: "Id");
         }
     }
 }

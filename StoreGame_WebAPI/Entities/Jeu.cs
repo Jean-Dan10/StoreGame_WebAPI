@@ -24,6 +24,7 @@ namespace StoreGame_WebAPI.entities
         public List<Commande> Commandes { get; set; } = new List<Commande>();
 
         public List<Wishlist> Whislists { get; set; } = new List<Wishlist>();
+        public List<JeuWishlist> JeuWishlists { get; set; } = new List<JeuWishlist>();
 
         public Jeu()
         {

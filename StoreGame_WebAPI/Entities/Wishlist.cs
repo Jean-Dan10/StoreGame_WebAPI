@@ -9,8 +9,7 @@ namespace StoreGame_WebAPI.Entities
         [ForeignKey("Compte")]
         public string User { get; set; }
         public Compte? Compte { get; set; }
-        public List<Jeu> Jeux { get; set; } = new List<Jeu>();
-
-
+        public List<JeuWishlist> JeuWishlists { get; set; } = new List<JeuWishlist>();
     }
+
 }

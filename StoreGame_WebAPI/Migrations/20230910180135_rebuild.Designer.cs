@@ -11,8 +11,8 @@ using StoreGame_WebAPI.Data;
 namespace StoreGame_WebAPI.Migrations
 {
     [DbContext(typeof(GameContext))]
-    [Migration("20230901161003_AddDataJeux")]
-    partial class AddDataJeux
+    [Migration("20230910180135_rebuild")]
+    partial class rebuild
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,6 +54,24 @@ namespace StoreGame_WebAPI.Migrations
                     b.ToTable("JeuWishlist");
                 });
 
+            modelBuilder.Entity("StoreGame_WebAPI.Entities.FavoriteGameStats", b =>
+                {
+                    b.Property<string>("GameName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdJeu")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PercentInWishlists")
+                        .HasColumnType("float");
+
+                    b.Property<int>("TotalWishlists")
+                        .HasColumnType("int");
+
+                    b.ToTable("FavoriteGameStats");
+                });
+
             modelBuilder.Entity("StoreGame_WebAPI.Entities.GameReview", b =>
                 {
                     b.Property<int>("IdReview")
@@ -84,6 +102,21 @@ namespace StoreGame_WebAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("GameReview");
+                });
+
+            modelBuilder.Entity("StoreGame_WebAPI.Entities.JeuWishlist", b =>
+                {
+                    b.Property<int>("JeuxIdJeu")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WishlistsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("JeuxIdJeu", "WishlistsId");
+
+                    b.HasIndex("WishlistsId");
+
+                    b.ToTable("jeuWishlists");
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.Entities.Wishlist", b =>
@@ -177,6 +210,24 @@ namespace StoreGame_WebAPI.Migrations
                             Nom = "Ami",
                             Prenom = "Ami",
                             User = "THEFRIEND"
+                        },
+                        new
+                        {
+                            IdClient = 7,
+                            AdresseCourriel = "ami2@gmail.com",
+                            AdressePhysique = "44 rue l'Amitié",
+                            Nom = "Le",
+                            Prenom = "Test1",
+                            User = "Test1"
+                        },
+                        new
+                        {
+                            IdClient = 6,
+                            AdresseCourriel = "ami3@gmail.com",
+                            AdressePhysique = "45 rue l'Amitié",
+                            Nom = "Le",
+                            Prenom = "Test2",
+                            User = "Test2"
                         });
                 });
 
@@ -244,6 +295,18 @@ namespace StoreGame_WebAPI.Migrations
                             User = "THEFRIEND",
                             Password = "123",
                             ProfileName = "ami"
+                        },
+                        new
+                        {
+                            User = "Test1",
+                            Password = "123",
+                            ProfileName = "LeTest1"
+                        },
+                        new
+                        {
+                            User = "Test2",
+                            Password = "123",
+                            ProfileName = "LeTest2"
                         });
                 });
 
@@ -327,14 +390,12 @@ namespace StoreGame_WebAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdJeu"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdGenre")
                         .HasColumnType("int");
 
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NomJeu")
@@ -697,6 +758,25 @@ namespace StoreGame_WebAPI.Migrations
                     b.Navigation("Compte");
 
                     b.Navigation("Jeu");
+                });
+
+            modelBuilder.Entity("StoreGame_WebAPI.Entities.JeuWishlist", b =>
+                {
+                    b.HasOne("StoreGame_WebAPI.entities.Jeu", "Jeu")
+                        .WithMany()
+                        .HasForeignKey("JeuxIdJeu")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StoreGame_WebAPI.Entities.Wishlist", "Wishlist")
+                        .WithMany()
+                        .HasForeignKey("WishlistsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Jeu");
+
+                    b.Navigation("Wishlist");
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.Entities.Wishlist", b =>
