@@ -33,13 +33,13 @@ namespace StoreGame_WebAPI.entities
         public void RemoveJeu(int idJeu)
         {
             Jeux.RemoveAll(jeu => jeu.IdJeu == idJeu);
-            // Update logic as needed
+      
         }
 
         public void AddJeu(Jeu jeu)
         {
             Jeux.Add(jeu);
-            // Update logic as needed
+           
         }
 
         public override string ToString()

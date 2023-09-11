@@ -31,6 +31,8 @@ namespace StoreGame_WebAPI.entities
             ProfileName = profileName;
         }
 
+        //mise en commentaire du code car n'est pas utiliser
+
         //public Commande TrouvePanier()
         //{
         //    foreach (Commande commande1 in Commandes)
@@ -43,26 +45,26 @@ namespace StoreGame_WebAPI.entities
         //    return null;
         //}
 
-        public void UpdateCommande(Commande commande)
-        {
-            for (int i = 0; i < Commandes.Count; i++)
-            {
-                if (Commandes[i].IdCommande == commande.IdCommande)
-                {
-                    Commandes[i] = commande;
-                }
-            }
-        }
+        //public void UpdateCommande(Commande commande)
+        //{
+        //    for (int i = 0; i < Commandes.Count; i++)
+        //    {
+        //        if (Commandes[i].IdCommande == commande.IdCommande)
+        //        {
+        //            Commandes[i] = commande;
+        //        }
+        //    }
+        //}
 
-        public void RemoveCommande(Commande commande)
-        {
-            Commandes.RemoveAll(c => c.IdCommande == commande.IdCommande);
-        }
+        //public void RemoveCommande(Commande commande)
+        //{
+        //    Commandes.RemoveAll(c => c.IdCommande == commande.IdCommande);
+        //}
 
-        public void CreatePanier(Commande panier)
-        {
-            Commandes.Add(panier);
-        }
+        //public void CreatePanier(Commande panier)
+        //{
+        //    Commandes.Add(panier);
+        //}
 
         public override string ToString()
         {
