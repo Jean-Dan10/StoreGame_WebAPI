@@ -96,6 +96,9 @@ namespace StoreGame_WebAPI.Controllers
           {
               return Problem("Entity set 'GameContext.Clients'  is null.");
           }
+
+        
+
             _context.Clients.Add(client);
             await _context.SaveChangesAsync();
 
