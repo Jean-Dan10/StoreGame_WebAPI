@@ -47,7 +47,7 @@ namespace StoreGame_WebAPI.Controllers
 
             if (client == null)
             {
-                return NotFound();
+                return NotFound("Aucun client avec le id suivant : "+ id);
             }
 
             return client;
@@ -60,7 +60,7 @@ namespace StoreGame_WebAPI.Controllers
         {
             if (id != client.IdClient)
             {
-                return BadRequest();
+                return BadRequest("Le id ne concorde pas avec la requête");
             }
 
             _context.Entry(client).State = EntityState.Modified;
@@ -73,15 +73,18 @@ namespace StoreGame_WebAPI.Controllers
             {
                 if (!ClientExists(id))
                 {
-                    return NotFound();
+                    return NotFound("Aucun client avec le id suivant : " + id);
                 }
                 else
                 {
                     throw;
                 }
             }
+                        
+            var ClientMAJ = await _context.Clients.FindAsync(id);
 
-            return NoContent();
+            
+            return Ok(new { Message = "Client mise-à-jour avec succès", Client = ClientMAJ });
         }
 
         // POST: api/Clients
@@ -110,13 +113,13 @@ namespace StoreGame_WebAPI.Controllers
             var client = await _context.Clients.FindAsync(id);
             if (client == null)
             {
-                return NotFound();
+                return NotFound("Aucun client avec le id suivant : " + id);
             }
 
             _context.Clients.Remove(client);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("Le client avec le ID :" + id + " à été supprimé avec succès");
         }
 
         private bool ClientExists(int id)

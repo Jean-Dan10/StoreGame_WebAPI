@@ -105,7 +105,7 @@ namespace StoreGame_WebAPI.Controllers
             {
                 if (!GameReviewExists(id))
                 {
-                    return NotFound();
+                    return NotFound("Aucune revu de jeu avec le id suivant : " + id);
                 }
                 else
                 {
@@ -142,13 +142,13 @@ namespace StoreGame_WebAPI.Controllers
             var gameReview = await _context.GameReviews.FindAsync(id);
             if (gameReview == null)
             {
-                return NotFound();
+                return NotFound("Aucune revu de jeu avec le id suivant : " + id);
             }
 
             _context.GameReviews.Remove(gameReview);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("La revu de jeu avec le ID :" + id + " à été supprimé avec succès");
         }
 
 

@@ -47,7 +47,7 @@ namespace StoreGame_WebAPI.Controllers
 
             if (compte == null)
             {
-                return NotFound();
+                return NotFound("Aucun compte avec le id suivant : " + id);
             }
 
             return compte;
@@ -60,7 +60,7 @@ namespace StoreGame_WebAPI.Controllers
         {
             if (id != compte.User)
             {
-                return BadRequest();
+                return BadRequest("Le id ne concorde pas avec la requête");
             }
 
             _context.Entry(compte).State = EntityState.Modified;
@@ -81,7 +81,10 @@ namespace StoreGame_WebAPI.Controllers
                 }
             }
 
-            return NoContent();
+            var CompteMAJ = await _context.Comptes.FindAsync(id);
+
+
+            return Ok(new { Message = "Compte mise-à-jour avec succès", Client = CompteMAJ });
         }
 
         // POST: api/Comptes
@@ -124,13 +127,13 @@ namespace StoreGame_WebAPI.Controllers
             var compte = await _context.Comptes.FindAsync(id);
             if (compte == null)
             {
-                return NotFound();
+                return NotFound("Aucun Compte avec le id suivant : " + id);
             }
 
             _context.Comptes.Remove(compte);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("Le Compte avec le ID :" + id + " à été supprimé avec succès");
         }
 
         private bool CompteExists(string id)
