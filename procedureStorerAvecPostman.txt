@@ -1,0 +1,170 @@
+CREATE PROCEDURE affichePourcentagePourJeuWishlistParId
+    @JeuId INT,
+    @Percentage FLOAT OUTPUT
+AS
+BEGIN
+    -- Obtenir le nombre total de jeux dans toutes les wishlists
+    DECLARE @TotalGamesInWishlists INT;
+    SELECT @TotalGamesInWishlists = COUNT(*) FROM jeuWishlists;
+
+    -- Obtenir le nombre d'occurrences du jeu spécifié
+    DECLARE @OccurrenceOfSpecificGame INT;
+    SELECT @OccurrenceOfSpecificGame = COUNT(*) FROM jeuWishlists WHERE JeuxIdJeu = @JeuId;
+
+    -- Calculer le pourcentage
+    SET @Percentage = CAST(@OccurrenceOfSpecificGame AS FLOAT) / CAST(@TotalGamesInWishlists AS FLOAT) * 100;
+END;
+
+
+CREATE PROCEDURE CalculateWishlistCompletionRates
+    @WishlistId INT,
+    @CompletionRate FLOAT OUTPUT
+AS
+BEGIN
+    -- Calculer le nombre total de jeux dans la base de données
+    DECLARE @TotalGames INT;
+    SELECT @TotalGames = COUNT(*) FROM Jeu;
+
+    -- Calculer le nombre de jeux dans la wishlist spécifiée
+    DECLARE @GamesInWishlist INT;
+    SELECT @GamesInWishlist = COUNT(*) FROM JeuWishlists WHERE WishlistsId = @WishlistId;
+
+    -- Calculer le taux de complétion de la wishlist
+    SET @CompletionRate = (CAST(@GamesInWishlist AS FLOAT) / CAST(@TotalGames AS FLOAT)) * 100;
+END;
+
+CREATE PROCEDURE DeleteGameFromWishlist
+    @WishlistId INT,
+    @JeuId INT
+AS
+BEGIN
+    DELETE FROM jeuWishlists
+    WHERE WishlistsId = @WishlistId AND JeuxIdJeu = @JeuId;
+END
+
+CREATE PROCEDURE GetAllGamesInWishlistWithInfo
+    @WishlistId INT
+AS
+BEGIN
+    SELECT 
+        j.NomJeu,
+        COUNT(jw.JeuxIdJeu) AS TimesInWishlists
+    FROM 
+        jeuWishlists jw
+    INNER JOIN 
+        Jeu j ON jw.JeuxIdJeu = j.IdJeu
+    WHERE 
+        jw.JeuxIdJeu IN (
+            SELECT JeuxIdJeu FROM jeuWishlists WHERE WishlistsId = @WishlistId
+        )
+    GROUP BY 
+        j.NomJeu
+END
+
+
+
+
+commande postman pour wishlist
+POST: http://localhost:5196/api/GameStore/Wishlists
+{
+    "user": "Test1"
+}
+affichage:
+{
+    "id": 4,
+    "user": "Test1",
+    "compte": null,
+    "jeuWishlists": []
+}
+
+
+
+
+POST: http://localhost:5196/api/GameStore/Wishlists/AddGamesToWishlist
+{
+    "wishlistId": 2,
+    "gameIds": [1, 2, 11, 23, 25]
+}
+affichage:
+Les jeux avec les ID 1, 2, 11, 23 ont été ajoutés. 
+Les jeux avec les ID 25 étaient déjà dans la liste de souhaits et n'ont pas été ajoutés à nouveau.
+
+{
+    "wishlistId": 2,
+    "gameIds": [1, 2, 11, 23, 25,26,27,28,100]
+}
+affichage:
+Les jeux avec les ID 28 ont été ajoutés. 
+Les jeux avec les ID 1, 2, 11, 23, 25, 26, 27 étaient déjà dans la liste de souhaits et n'ont pas été ajoutés à nouveau. 
+Les jeux avec les ID 100 n'ont pas été trouvés et n'ont pas été ajoutés.
+
+{
+    "wishlistId": 3,
+    "gameIds": [26,27,100]
+}
+affichage:
+Les jeux avec les ID 26, 27 ont été ajoutés. 
+Les jeux avec les ID 100 n'ont pas été trouvés et n'ont pas été ajoutés.
+
+requete ou wishlist 5 n'est pas present
+{
+    "wishlistId": 5,
+    "gameIds": [1, 2, 11, 23, 25]
+}
+affichage:
+Wishlist not found
+
+
+DEL: http://localhost:5196/api/GameStore/Wishlists/DeleteGameFromWishlist/2/2
+affiche: Jeu supprimé de la wishlist.
+
+
+GET: http://localhost:5196/api/GameStore/Wishlists/GetAllGamesInWishlistWithInfos/2
+affichage:
+[
+  {
+    "nomJeu": "Amnesia: Rebirth",
+    "completionRate": 6.25,
+    "timesInWishlists": 2
+  },
+  {
+    "nomJeu": "Doom Eternal",
+    "completionRate": 12.5,
+    "timesInWishlists": 4
+  },
+  {
+    "nomJeu": "Final Fantasy XIV",
+    "completionRate": 3.125,
+    "timesInWishlists": 1
+  },
+  {
+    "nomJeu": "Madden NFL 23",
+    "completionRate": 12.5,
+    "timesInWishlists": 4
+  },
+  {
+    "nomJeu": "NBA 2K23",
+    "completionRate": 6.25,
+    "timesInWishlists": 2
+  },
+  {
+    "nomJeu": "Rayman Legends",
+    "completionRate": 6.25,
+    "timesInWishlists": 2
+  },
+  {
+    "nomJeu": "Stardew Valley",
+    "completionRate": 12.5,
+    "timesInWishlists": 4
+  },
+  {
+    "nomJeu": "Super Mario Odyssey",
+    "completionRate": 15.625,
+    "timesInWishlists": 5
+  },
+  {
+    "nomJeu": "Total War: Warhammer II",
+    "completionRate": 3.125,
+    "timesInWishlists": 1
+  }
+]
