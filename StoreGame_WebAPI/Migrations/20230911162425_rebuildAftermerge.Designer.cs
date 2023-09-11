@@ -12,13 +12,8 @@ using StoreGame_WebAPI.Data;
 namespace StoreGame_WebAPI.Migrations
 {
     [DbContext(typeof(GameContext))]
-<<<<<<<< HEAD:StoreGame_WebAPI/Migrations/20230910193255_wishlist.Designer.cs
-    [Migration("20230910193255_wishlist")]
-    partial class wishlist
-========
-    [Migration("20230907020014_AddDataGameReview")]
-    partial class AddDataGameReview
->>>>>>>> 14d34660a1703b31f7d4bfae9af5b9e7dfd163af:StoreGame_WebAPI/Migrations/20230907020014_AddDataGameReview.Designer.cs
+    [Migration("20230911162425_rebuildAftermerge")]
+    partial class rebuildAftermerge
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,6 +40,25 @@ namespace StoreGame_WebAPI.Migrations
                     b.ToTable("CommandeJeu");
                 });
 
+            modelBuilder.Entity("StoreGame_WebAPI.DTO.classIntermediaire.AverageReviewForEachGame", b =>
+                {
+                    b.Property<int>("IdJeu")
+                        .HasColumnType("int");
+
+                    b.Property<double>("MoyenneNote")
+                        .HasColumnType("float");
+
+                    b.ToTable("AverageReviewForEachGame");
+                });
+
+            modelBuilder.Entity("StoreGame_WebAPI.DTO.classIntermediaire.AverageScoreResult", b =>
+                {
+                    b.Property<double>("MoyenneNote")
+                        .HasColumnType("float");
+
+                    b.ToTable("AverageScoreResult");
+                });
+
             modelBuilder.Entity("StoreGame_WebAPI.Entities.FavoriteGameStats", b =>
                 {
                     b.Property<string>("GameName")
@@ -61,25 +75,6 @@ namespace StoreGame_WebAPI.Migrations
                         .HasColumnType("int");
 
                     b.ToTable("FavoriteGameStats");
-                });
-
-            modelBuilder.Entity("StoreGame_WebAPI.DTO.AverageReviewForEachGame", b =>
-                {
-                    b.Property<int>("IdJeu")
-                        .HasColumnType("int");
-
-                    b.Property<double>("MoyenneNote")
-                        .HasColumnType("float");
-
-                    b.ToTable("AverageReviewForEachGame");
-                });
-
-            modelBuilder.Entity("StoreGame_WebAPI.DTO.AverageScoreResult", b =>
-                {
-                    b.Property<double>("MoyenneNote")
-                        .HasColumnType("float");
-
-                    b.ToTable("AverageScoreResult");
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.Entities.GameReview", b =>
@@ -281,6 +276,18 @@ namespace StoreGame_WebAPI.Migrations
                     b.HasIndex("WishlistsId");
 
                     b.ToTable("jeuWishlists");
+
+                    b.HasData(
+                        new
+                        {
+                            JeuxIdJeu = 1,
+                            WishlistsId = 1
+                        },
+                        new
+                        {
+                            JeuxIdJeu = 2,
+                            WishlistsId = 1
+                        });
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.Entities.Wishlist", b =>
@@ -306,6 +313,13 @@ namespace StoreGame_WebAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("Wishlist");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            User = "admin"
+                        });
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.entities.Client", b =>
@@ -990,8 +1004,7 @@ namespace StoreGame_WebAPI.Migrations
                 {
                     b.Navigation("Commandes");
 
-                    b.Navigation("Wishlist")
-                        .IsRequired();
+                    b.Navigation("Wishlist");
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.entities.Jeu", b =>

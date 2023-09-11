@@ -7,11 +7,32 @@
 namespace StoreGame_WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class rebuild : Migration
+    public partial class rebuildAftermerge : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AverageReviewForEachGame",
+                columns: table => new
+                {
+                    IdJeu = table.Column<int>(type: "int", nullable: false),
+                    MoyenneNote = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AverageScoreResult",
+                columns: table => new
+                {
+                    MoyenneNote = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                });
+
             migrationBuilder.CreateTable(
                 name: "Compte",
                 columns: table => new
@@ -95,25 +116,6 @@ namespace StoreGame_WebAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Wishlist",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    User = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Wishlist", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Wishlist_Compte_User",
-                        column: x => x.User,
-                        principalTable: "Compte",
-                        principalColumn: "User",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Jeu",
                 columns: table => new
                 {
@@ -189,27 +191,28 @@ namespace StoreGame_WebAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "JeuWishlist",
+                name: "Wishlist",
                 columns: table => new
                 {
-                    JeuxIdJeu = table.Column<int>(type: "int", nullable: false),
-                    WhislistsId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    User = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    JeuIdJeu = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_JeuWishlist", x => new { x.JeuxIdJeu, x.WhislistsId });
+                    table.PrimaryKey("PK_Wishlist", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_JeuWishlist_Jeu_JeuxIdJeu",
-                        column: x => x.JeuxIdJeu,
+                        name: "FK_Wishlist_Compte_User",
+                        column: x => x.User,
+                        principalTable: "Compte",
+                        principalColumn: "User",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Wishlist_Jeu_JeuIdJeu",
+                        column: x => x.JeuIdJeu,
                         principalTable: "Jeu",
-                        principalColumn: "idJeu",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_JeuWishlist_Wishlist_WhislistsId",
-                        column: x => x.WhislistsId,
-                        principalTable: "Wishlist",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "idJeu");
                 });
 
             migrationBuilder.CreateTable(
@@ -319,6 +322,46 @@ namespace StoreGame_WebAPI.Migrations
                     { 33, "Plongez dans une guerre moderne avec des graphismes époustouflants et une expérience multijoueur intense.", 5, "/image/CODMW.png", "Call of Duty: Modern Warfare", 59.990000000000002 }
                 });
 
+            migrationBuilder.InsertData(
+                table: "Wishlist",
+                columns: new[] { "Id", "JeuIdJeu", "User" },
+                values: new object[] { 1, null, "admin" });
+
+            migrationBuilder.InsertData(
+                table: "GameReview",
+                columns: new[] { "IdReview", "Commentaire", "IdJeu", "Note", "User" },
+                values: new object[,]
+                {
+                    { 1, "Ce jeu est incroyable! Les graphismes sont à couper le souffle, et l'histoire est passionnante. J'adore!", 1, 4, "admin" },
+                    { 2, "J'ai passé des heures à jouer à ce jeu. C'est vraiment addictif, et les personnages sont attachants.", 2, 3, "admin" },
+                    { 3, "Ce jeu mérite 5 étoiles. La jouabilité est fluide, et les niveaux sont bien conçus.", 3, 5, "admin" },
+                    { 4, "The Witcher 3 est un chef-d'œuvre absolu! L'univers est riche, les quêtes sont captivantes. Ma note : 5/5.", 4, 5, "admin" },
+                    { 5, "Rayman Legends est un jeu de plateforme incroyablement amusant. Les niveaux musicaux sont géniaux! Note : 4/5.", 5, 4, "admin" },
+                    { 6, "Assassin's Creed Origins est un voyage passionnant dans l'Égypte antique. Les combats sont géniaux. Note : 4/5.", 6, 4, "admin" },
+                    { 7, "Terraria est un jeu de construction addictif. L'exploration est infinie! Ma note : 4/5.", 7, 4, "admin" },
+                    { 8, "Final Fantasy XIV est un MMORPG de qualité avec une histoire épique. Je recommande! Note : 5/5.", 8, 5, "admin" },
+                    { 9, "Celeste est un jeu de plateforme exigeant mais gratifiant. Les défis sont stimulants. Note : 4/5.", 9, 4, "admin" },
+                    { 10, "Red Dead Redemption 2 est une expérience immersive dans le Far West. Les détails sont incroyables. Note : 5/5.", 10, 5, "admin" },
+                    { 11, "Les graphismes de ce jeu sont correct, et l'intrigue est palpitante. Je lui donne 3 étoiles!", 1, 3, "Grimworld" },
+                    { 12, "J'ai été accro à ce jeu pendant des semaines. Les personnages sont super attachants, et l'aventure est passionnante. Ma note : 4/5.", 2, 4, "Grimworld" },
+                    { 13, "Ce jeu mérite toutes les éloges. La jouabilité est fluide, et chaque niveau est un plaisir à parcourir. Ma note : 5/5.", 3, 5, "Grimworld" },
+                    { 14, "Super Mario Odyssey est un jeu incroyable! Les graphismes sont époustouflants, et le gameplay est une pure joie. Ma note : 5/5.", 1, 5, "Tyzral" },
+                    { 15, "J'ai passé d'innombrables heures à explorer chaque royaume de ce jeu. C'est un chef-d'œuvre du genre. Note : 5/5.", 2, 5, "Tyzral" },
+                    { 16, "Ce jeu est tellement amusant! Les niveaux sont bien conçus, et les défis sont stimulants. Ma note : 3/5.", 3, 3, "Tyzral" },
+                    { 17, "Ce jeu est décevant. Les graphismes sont médiocres, et l'histoire est ennuyeuse. Ma note : 2/5.", 1, 2, "THEFRIEND" },
+                    { 18, "The Legend of Zelda: Breath of the Wild est un jeu surévalué. Je ne vois pas ce que les gens lui trouvent. Note : 2/5.", 2, 2, "THEFRIEND" },
+                    { 19, "Minecraft est un jeu sans intérêt. Construire des choses n'a rien d'amusant. Ma note : 2/5.", 3, 2, "THEFRIEND" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "jeuWishlists",
+                columns: new[] { "JeuxIdJeu", "WishlistsId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 1 }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Client_User",
                 table: "Client",
@@ -351,14 +394,14 @@ namespace StoreGame_WebAPI.Migrations
                 column: "IdGenre");
 
             migrationBuilder.CreateIndex(
-                name: "IX_JeuWishlist_WhislistsId",
-                table: "JeuWishlist",
-                column: "WhislistsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_jeuWishlists_WishlistsId",
                 table: "jeuWishlists",
                 column: "WishlistsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Wishlist_JeuIdJeu",
+                table: "Wishlist",
+                column: "JeuIdJeu");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Wishlist_User",
@@ -370,6 +413,12 @@ namespace StoreGame_WebAPI.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AverageReviewForEachGame");
+
+            migrationBuilder.DropTable(
+                name: "AverageScoreResult");
+
             migrationBuilder.DropTable(
                 name: "Client");
 
@@ -383,25 +432,22 @@ namespace StoreGame_WebAPI.Migrations
                 name: "GameReview");
 
             migrationBuilder.DropTable(
-                name: "JeuWishlist");
-
-            migrationBuilder.DropTable(
                 name: "jeuWishlists");
 
             migrationBuilder.DropTable(
                 name: "Commande");
 
             migrationBuilder.DropTable(
-                name: "Jeu");
-
-            migrationBuilder.DropTable(
                 name: "Wishlist");
 
             migrationBuilder.DropTable(
-                name: "Genre");
+                name: "Compte");
 
             migrationBuilder.DropTable(
-                name: "Compte");
+                name: "Jeu");
+
+            migrationBuilder.DropTable(
+                name: "Genre");
         }
     }
 }

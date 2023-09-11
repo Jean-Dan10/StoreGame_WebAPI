@@ -37,24 +37,6 @@ namespace StoreGame_WebAPI.Migrations
                     b.ToTable("CommandeJeu");
                 });
 
-            modelBuilder.Entity("StoreGame_WebAPI.Entities.FavoriteGameStats", b =>
-                {
-                    b.Property<string>("GameName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IdJeu")
-                        .HasColumnType("int");
-
-                    b.Property<double>("PercentInWishlists")
-                        .HasColumnType("float");
-
-                    b.Property<int>("TotalWishlists")
-                        .HasColumnType("int");
-
-                    b.ToTable("FavoriteGameStats");
-                });
-
             modelBuilder.Entity("StoreGame_WebAPI.DTO.classIntermediaire.AverageReviewForEachGame", b =>
                 {
                     b.Property<int>("IdJeu")
@@ -72,6 +54,24 @@ namespace StoreGame_WebAPI.Migrations
                         .HasColumnType("float");
 
                     b.ToTable("AverageScoreResult");
+                });
+
+            modelBuilder.Entity("StoreGame_WebAPI.Entities.FavoriteGameStats", b =>
+                {
+                    b.Property<string>("GameName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdJeu")
+                        .HasColumnType("int");
+
+                    b.Property<double>("PercentInWishlists")
+                        .HasColumnType("float");
+
+                    b.Property<int>("TotalWishlists")
+                        .HasColumnType("int");
+
+                    b.ToTable("FavoriteGameStats");
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.Entities.GameReview", b =>
@@ -273,6 +273,48 @@ namespace StoreGame_WebAPI.Migrations
                     b.HasIndex("WishlistsId");
 
                     b.ToTable("jeuWishlists");
+
+                    b.HasData(
+                        new
+                        {
+                            JeuxIdJeu = 1,
+                            WishlistsId = 1
+                        },
+                        new
+                        {
+                            JeuxIdJeu = 2,
+                            WishlistsId = 1
+                        },
+                        new
+                        {
+                            JeuxIdJeu = 1,
+                            WishlistsId = 2
+                        },
+                        new
+                        {
+                            JeuxIdJeu = 2,
+                            WishlistsId = 2
+                        },
+                        new
+                        {
+                            JeuxIdJeu = 1,
+                            WishlistsId = 3
+                        },
+                        new
+                        {
+                            JeuxIdJeu = 2,
+                            WishlistsId = 3
+                        },
+                        new
+                        {
+                            JeuxIdJeu = 3,
+                            WishlistsId = 3
+                        },
+                        new
+                        {
+                            JeuxIdJeu = 4,
+                            WishlistsId = 3
+                        });
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.Entities.Wishlist", b =>
@@ -298,6 +340,23 @@ namespace StoreGame_WebAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("Wishlist");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            User = "admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            User = "test1"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            User = "test2"
+                        });
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.entities.Client", b =>
