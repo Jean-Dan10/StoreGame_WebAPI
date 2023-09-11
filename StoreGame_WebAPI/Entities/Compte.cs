@@ -18,7 +18,8 @@ namespace StoreGame_WebAPI.entities
 
         public List<Commande> Commandes { get; set; } = new List<Commande>();
 
-        public Wishlist Wishlist { get; set; }
+
+        public Wishlist? Wishlist { get; set; }
 
         public Compte()
         {
@@ -31,7 +32,8 @@ namespace StoreGame_WebAPI.entities
             ProfileName = profileName;
         }
 
-        //mise en commentaire du code car n'est pas utiliser
+
+        // non utilisé
 
         //public Commande TrouvePanier()
         //{

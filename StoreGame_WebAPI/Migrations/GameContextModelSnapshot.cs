@@ -55,7 +55,7 @@ namespace StoreGame_WebAPI.Migrations
                     b.ToTable("FavoriteGameStats");
                 });
 
-            modelBuilder.Entity("StoreGame_WebAPI.DTO.AverageReviewForEachGame", b =>
+            modelBuilder.Entity("StoreGame_WebAPI.DTO.classIntermediaire.AverageReviewForEachGame", b =>
                 {
                     b.Property<int>("IdJeu")
                         .HasColumnType("int");
@@ -66,7 +66,7 @@ namespace StoreGame_WebAPI.Migrations
                     b.ToTable("AverageReviewForEachGame");
                 });
 
-            modelBuilder.Entity("StoreGame_WebAPI.DTO.AverageScoreResult", b =>
+            modelBuilder.Entity("StoreGame_WebAPI.DTO.classIntermediaire.AverageScoreResult", b =>
                 {
                     b.Property<double>("MoyenneNote")
                         .HasColumnType("float");
@@ -982,8 +982,7 @@ namespace StoreGame_WebAPI.Migrations
                 {
                     b.Navigation("Commandes");
 
-                    b.Navigation("Wishlist")
-                        .IsRequired();
+                    b.Navigation("Wishlist");
                 });
 
             modelBuilder.Entity("StoreGame_WebAPI.entities.Jeu", b =>

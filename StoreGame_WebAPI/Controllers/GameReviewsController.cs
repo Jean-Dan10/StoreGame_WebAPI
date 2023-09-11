@@ -154,7 +154,7 @@ namespace StoreGame_WebAPI.Controllers
 
         //GET: api/GameReviews/Game/5
 
-        [HttpGet("Game/{id}")]
+        [HttpGet("Average/{id}/Game")]
         public async Task<ActionResult<IEnumerable<GameReviewsWithGameNameDTO>>> GetGameReviewByGame(int id)
         {
             var gameReviews = await _context.GameReviews

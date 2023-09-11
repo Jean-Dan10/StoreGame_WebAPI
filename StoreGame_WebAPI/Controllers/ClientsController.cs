@@ -25,11 +25,14 @@ namespace StoreGame_WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Client>>> GetClients()
         {
-          if (_context.Clients == null)
-          {
-              return NotFound();
-          }
-            return await _context.Clients.ToListAsync();
+          
+          var clients = await _context.Clients.ToListAsync();
+
+            if(clients.Count == 0) {
+                return NotFound("Aucune données de clients");
+            }
+
+            return clients;
         }
 
         // GET: api/Clients/5

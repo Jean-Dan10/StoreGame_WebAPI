@@ -25,16 +25,18 @@ namespace StoreGame_WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Compte>>> GetComptes()
         {
-          if (_context.Comptes == null)
-          {
-              return NotFound();
-          }
-            
-            return await _context.Comptes.ToListAsync();
+            var comptes = await _context.Comptes.ToListAsync();
+
+            if (comptes.Count == 0)
+            {
+                return NotFound("Aucune données de compte");
+            }
+
+            return comptes;
         }
 
-        // GET: api/Comptes/5
-        [HttpGet("{id}")]
+            // GET: api/Comptes/5
+            [HttpGet("{id}")]
         public async Task<ActionResult<Compte>> GetCompte(string id)
         {
           if (_context.Comptes == null)
