@@ -25,16 +25,18 @@ namespace StoreGame_WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Compte>>> GetComptes()
         {
-          if (_context.Comptes == null)
-          {
-              return NotFound();
-          }
-            
-            return await _context.Comptes.ToListAsync();
+            var comptes = await _context.Comptes.ToListAsync();
+
+            if (comptes.Count == 0)
+            {
+                return NotFound("Aucune données de compte");
+            }
+
+            return comptes;
         }
 
-        // GET: api/Comptes/5
-        [HttpGet("{id}")]
+            // GET: api/Comptes/5
+            [HttpGet("{id}")]
         public async Task<ActionResult<Compte>> GetCompte(string id)
         {
           if (_context.Comptes == null)
@@ -45,7 +47,7 @@ namespace StoreGame_WebAPI.Controllers
 
             if (compte == null)
             {
-                return NotFound();
+                return NotFound("Aucun compte avec le id suivant : " + id);
             }
 
             return compte;
@@ -58,7 +60,7 @@ namespace StoreGame_WebAPI.Controllers
         {
             if (id != compte.User)
             {
-                return BadRequest();
+                return BadRequest("Le id ne concorde pas avec la requête");
             }
 
             _context.Entry(compte).State = EntityState.Modified;
@@ -79,7 +81,10 @@ namespace StoreGame_WebAPI.Controllers
                 }
             }
 
-            return NoContent();
+            var CompteMAJ = await _context.Comptes.FindAsync(id);
+
+
+            return Ok(new { Message = "Compte mise-à-jour avec succès", Client = CompteMAJ });
         }
 
         // POST: api/Comptes
@@ -122,13 +127,13 @@ namespace StoreGame_WebAPI.Controllers
             var compte = await _context.Comptes.FindAsync(id);
             if (compte == null)
             {
-                return NotFound();
+                return NotFound("Aucun Compte avec le id suivant : " + id);
             }
 
             _context.Comptes.Remove(compte);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("Le Compte avec le ID :" + id + " à été supprimé avec succès");
         }
 
         private bool CompteExists(string id)

@@ -25,11 +25,14 @@ namespace StoreGame_WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Client>>> GetClients()
         {
-          if (_context.Clients == null)
-          {
-              return NotFound();
-          }
-            return await _context.Clients.ToListAsync();
+          
+          var clients = await _context.Clients.ToListAsync();
+
+            if(clients.Count == 0) {
+                return NotFound("Aucune données de clients");
+            }
+
+            return clients;
         }
 
         // GET: api/Clients/5
@@ -44,7 +47,7 @@ namespace StoreGame_WebAPI.Controllers
 
             if (client == null)
             {
-                return NotFound();
+                return NotFound("Aucun client avec le id suivant : "+ id);
             }
 
             return client;
@@ -57,7 +60,7 @@ namespace StoreGame_WebAPI.Controllers
         {
             if (id != client.IdClient)
             {
-                return BadRequest();
+                return BadRequest("Le id ne concorde pas avec la requête");
             }
 
             _context.Entry(client).State = EntityState.Modified;
@@ -70,15 +73,18 @@ namespace StoreGame_WebAPI.Controllers
             {
                 if (!ClientExists(id))
                 {
-                    return NotFound();
+                    return NotFound("Aucun client avec le id suivant : " + id);
                 }
                 else
                 {
                     throw;
                 }
             }
+                        
+            var ClientMAJ = await _context.Clients.FindAsync(id);
 
-            return NoContent();
+            
+            return Ok(new { Message = "Client mise-à-jour avec succès", Client = ClientMAJ });
         }
 
         // POST: api/Clients
@@ -90,6 +96,9 @@ namespace StoreGame_WebAPI.Controllers
           {
               return Problem("Entity set 'GameContext.Clients'  is null.");
           }
+
+        
+
             _context.Clients.Add(client);
             await _context.SaveChangesAsync();
 
@@ -107,13 +116,13 @@ namespace StoreGame_WebAPI.Controllers
             var client = await _context.Clients.FindAsync(id);
             if (client == null)
             {
-                return NotFound();
+                return NotFound("Aucun client avec le id suivant : " + id);
             }
 
             _context.Clients.Remove(client);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("Le client avec le ID :" + id + " à été supprimé avec succès");
         }
 
         private bool ClientExists(int id)

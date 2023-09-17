@@ -545,6 +545,75 @@ namespace StoreGame_WebAPI.Data
                    Note = 2
                });
 
+            modelBuilder.Entity<Wishlist>().HasData(
+                new Wishlist
+                {
+                    Id = 1,
+                    User = "admin"
+                  
+                },
+                 new Wishlist
+                 {
+                    Id = 2,
+                    User = "test1"
+                  
+                },
+                 new Wishlist
+                 {
+                     Id = 3,
+                     User = "test2"
+
+                 }
+
+                );
+
+            
+            modelBuilder.Entity<JeuWishlist>().HasData(
+                new JeuWishlist
+                {
+                    WishlistsId = 1,
+                    JeuxIdJeu = 1,
+                },
+                new JeuWishlist
+                {
+                    WishlistsId = 1,
+                    JeuxIdJeu = 2,
+                },   
+                new JeuWishlist
+                {
+                    WishlistsId =2,
+                    JeuxIdJeu = 1,
+                },
+                new JeuWishlist
+                {
+                    WishlistsId = 2,
+                    JeuxIdJeu = 2,
+                }
+                ,
+                new JeuWishlist
+                {
+                    WishlistsId = 3,
+                    JeuxIdJeu = 1,
+                },
+                new JeuWishlist
+                {
+                    WishlistsId = 3,
+                    JeuxIdJeu = 2,
+                },
+                new JeuWishlist
+                {
+                    WishlistsId = 3,
+                    JeuxIdJeu = 3,
+                },
+                new JeuWishlist
+                {
+                    WishlistsId = 3,
+                    JeuxIdJeu = 4,
+                }
+
+
+            );
+
         }
 
         public DbSet<StoreGame_WebAPI.Entities.Wishlist>? Wishlist { get; set; }

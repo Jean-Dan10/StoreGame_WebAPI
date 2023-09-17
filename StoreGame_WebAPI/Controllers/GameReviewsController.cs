@@ -105,7 +105,7 @@ namespace StoreGame_WebAPI.Controllers
             {
                 if (!GameReviewExists(id))
                 {
-                    return NotFound();
+                    return NotFound("Aucune revu de jeu avec le id suivant : " + id);
                 }
                 else
                 {
@@ -125,6 +125,12 @@ namespace StoreGame_WebAPI.Controllers
           {
               return Problem("Entity set 'GameContext.GameReviews'  is null.");
           }
+
+            if (gameReview.Note < 0 || gameReview.Note > 5)
+            {
+                return Problem("La note doit être comprise entre 0 et 5");
+            }
+
             _context.GameReviews.Add(gameReview);
             await _context.SaveChangesAsync();
 
@@ -142,24 +148,33 @@ namespace StoreGame_WebAPI.Controllers
             var gameReview = await _context.GameReviews.FindAsync(id);
             if (gameReview == null)
             {
-                return NotFound();
+                return NotFound("Aucune revu de jeu avec le id suivant : " + id);
             }
 
             _context.GameReviews.Remove(gameReview);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("La revu de jeu avec le ID :" + id + " à été supprimé avec succès");
         }
 
 
-        //GET: api/GameReviews/Game/5
+        //GET: api/GameStore/GameReviews/Averages/5/Game
 
-        [HttpGet("Game/{id}")]
+        [HttpGet("Averages/{id}/Game")]
         public async Task<ActionResult<IEnumerable<GameReviewsWithGameNameDTO>>> GetGameReviewByGame(int id)
         {
+            if (!JeuExists(id))
+            {
+                return NotFound("Aucune jeu n'existe pour ce id: " + id);
+
+            }
+
+
             var gameReviews = await _context.GameReviews
                 .FromSqlRaw("GetGameReviewsByGameId @idJeu", new SqlParameter("@idJeu", id))
                 .ToListAsync();
+
+
 
             if (gameReviews == null || gameReviews.Count == 0)
             {
@@ -182,10 +197,29 @@ namespace StoreGame_WebAPI.Controllers
             return Ok(gameReviewDTOs);
         }
 
-        //GET: api/GameReviews/Average/5
-        [HttpGet("Average/{id}")]
+        //GET: api/GameReviews/Average/5/Game
+        [HttpGet("Average/{id}/Game")]
         public IActionResult GetAverageReview(int id)
+
         {
+            
+            if (!JeuExists(id)){
+                return NotFound("Aucune jeu n'existe pour ce id: " + id);
+
+            }
+
+
+            var gameReviews =  _context.GameReviews
+            .Where(gr => gr.IdJeu == id)
+            .ToList();
+
+            if (gameReviews.Count == 0)
+            {
+                return NotFound(new { error = "Aucune Revu de jeu existant pour id : " + id });
+            }
+
+
+
             var averageScore = _context.Set<AverageScoreResult>()
                 .FromSqlRaw("GetGameReviewsAvgByGame @idJeu", new SqlParameter("@idJeu", id))
                 .AsEnumerable()
@@ -216,7 +250,7 @@ namespace StoreGame_WebAPI.Controllers
 
             if (averageScorelist == null || averageScorelist.Count == 0)
             {
-                return NotFound("No game reviews found.");
+                return NotFound("aucune revu de jeu trouvé");
             }
 
 
@@ -236,6 +270,12 @@ namespace StoreGame_WebAPI.Controllers
         {
             return (_context.GameReviews?.Any(e => e.IdReview == id)).GetValueOrDefault();
         }
+
+        private bool JeuExists(int id)
+        {
+            return (_context.Jeux?.Any(e => e.IdJeu == id)).GetValueOrDefault();
+        }
+
 
 
 

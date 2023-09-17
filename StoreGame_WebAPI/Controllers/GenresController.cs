@@ -44,7 +44,7 @@ namespace StoreGame_WebAPI.Controllers
 
             if (genre == null)
             {
-                return NotFound();
+                return NotFound("Aucun genre avec le id suivant : " + id);
             }
 
             return genre;
@@ -57,7 +57,7 @@ namespace StoreGame_WebAPI.Controllers
         {
             if (id != genre.IdGenre)
             {
-                return BadRequest();
+                return BadRequest("Le id ne concorde pas avec la requête");
             }
 
             _context.Entry(genre).State = EntityState.Modified;
@@ -70,7 +70,7 @@ namespace StoreGame_WebAPI.Controllers
             {
                 if (!GenreExists(id))
                 {
-                    return NotFound();
+                    return NotFound("Aucun genre avec le id suivant : " + id);
                 }
                 else
                 {
@@ -78,7 +78,10 @@ namespace StoreGame_WebAPI.Controllers
                 }
             }
 
-            return NoContent();
+            var GenreMAJ = await _context.Genres.FindAsync(id);
+
+
+            return Ok(new { Message = "Genre mise-à-jour avec succès", Client = GenreMAJ });
         }
 
         // POST: api/Genres
@@ -107,13 +110,13 @@ namespace StoreGame_WebAPI.Controllers
             var genre = await _context.Genres.FindAsync(id);
             if (genre == null)
             {
-                return NotFound();
+                return NotFound("Aucun Genre avec le id suivant : " + id);
             }
 
             _context.Genres.Remove(genre);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("Le Genre avec le ID :" + id + " à été supprimé avec succès");
         }
 
         private bool GenreExists(int id)

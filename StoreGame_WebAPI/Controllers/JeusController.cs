@@ -25,11 +25,14 @@ namespace StoreGame_WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Jeu>>> GetJeux()
         {
-          if (_context.Jeux == null)
-          {
-              return NotFound();
-          }
-            return await _context.Jeux.ToListAsync();
+            var jeux = await _context.Jeux.ToListAsync();
+
+            if (jeux.Count == 0)
+            {
+                return NotFound("Aucune données de jeu");
+            }
+
+            return jeux;
         }
 
         // GET: api/Jeus/5
@@ -44,7 +47,7 @@ namespace StoreGame_WebAPI.Controllers
 
             if (jeu == null)
             {
-                return NotFound();
+                return NotFound("Aucun genre avec le id suivant : " + id);
             }
 
             return jeu;
@@ -57,7 +60,7 @@ namespace StoreGame_WebAPI.Controllers
         {
             if (id != jeu.IdJeu)
             {
-                return BadRequest();
+                return BadRequest("Le id ne concorde pas avec la requête");
             }
 
             _context.Entry(jeu).State = EntityState.Modified;
@@ -70,7 +73,7 @@ namespace StoreGame_WebAPI.Controllers
             {
                 if (!JeuExists(id))
                 {
-                    return NotFound();
+                    return NotFound("Aucun client avec le id suivant : " + id);
                 }
                 else
                 {
@@ -78,7 +81,10 @@ namespace StoreGame_WebAPI.Controllers
                 }
             }
 
-            return NoContent();
+            var JeuMAJ = await _context.Genres.FindAsync(id);
+
+
+            return Ok(new { Message = "Jeu mise-à-jour avec succès", Client = JeuMAJ });
         }
 
         // POST: api/Jeus
@@ -107,13 +113,13 @@ namespace StoreGame_WebAPI.Controllers
             var jeu = await _context.Jeux.FindAsync(id);
             if (jeu == null)
             {
-                return NotFound();
+                return NotFound("Aucun Jeu avec le id suivant : " + id);
             }
 
             _context.Jeux.Remove(jeu);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("Le Jeu avec le ID :" + id + " à été supprimé avec succès");
         }
 
         private bool JeuExists(int id)
