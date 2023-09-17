@@ -106,6 +106,13 @@ namespace StoreGame_WebAPI.Controllers
           {
               return Problem("Entity set 'GameContext.Wishlists'  is null.");
           }
+            // Vérifiez si une wishlist existe déjà pour ce compte.
+            var existingWishlist = await _context.Wishlists.FirstOrDefaultAsync(w => w.User == wishlist.User);
+            if (existingWishlist != null)
+            {
+                return BadRequest("Il y a déjà une Wishlist créée pour ce compte.");
+            }
+
             _context.Wishlists.Add(wishlist);
             await _context.SaveChangesAsync();
 
@@ -130,60 +137,6 @@ namespace StoreGame_WebAPI.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-       
-
-        //fonctionnel, version avec deja dedans et non (pas de verif si donner non existante)
-        [HttpPost("AddGamesToWishlist")]
-        public async Task<IActionResult> AddGamesToWishlist([FromBody] requeteWishlistDTO request)
-        {
-            int wishlistId = request.WishlistId;
-            List<int> gameIds = request.GameIds;
-
-            // recherche et verifie si la wishlist est presente
-            var wishlist = await _context.Wishlists.FindAsync(wishlistId);
-            if (wishlist == null)
-            {
-                return NotFound("Wishlist not found");
-            }
-
-            // recherche et verifie sur le jeux est present
-            var games = await _context.Jeux.Where(g => gameIds.Contains(g.IdJeu)).ToListAsync();
-            if (games.Count != gameIds.Count)
-            {
-                return NotFound("One or more games not found");
-            }
-
-            // Check for existing entries
-            var existingEntries = await _context.jeuWishlists
-                .Where(jw => jw.WishlistsId == wishlistId && gameIds.Contains(jw.JeuxIdJeu))
-                .Select(jw => jw.JeuxIdJeu)
-                .ToListAsync();
-
-            // Calculate new and already added game IDs
-            var newGameIds = gameIds.Except(existingEntries).ToList();
-            var alreadyAddedGameIds = gameIds.Intersect(existingEntries).ToList();
-
-            // Add new entries
-            foreach (var gameId in newGameIds)
-            {
-                var jeuWishlist = new JeuWishlist
-                {
-                    JeuxIdJeu = gameId,
-                    WishlistsId = wishlistId
-                };
-
-                _context.jeuWishlists.Add(jeuWishlist);
-            }
-            await _context.SaveChangesAsync();
-
-            if (alreadyAddedGameIds.Any())
-            {
-                return Ok($"Les jeux avec les ID {string.Join(", ", newGameIds)} ont été ajoutés. Les jeux avec les ID {string.Join(", ", alreadyAddedGameIds)} étaient déjà dans la liste de souhaits et n'ont pas été ajoutés à nouveau.");
-            }
-
-            return Ok($"Les jeux avec les ID {string.Join(", ", newGameIds)} ont été ajoutés à la liste de souhaits.");
         }
 
 
@@ -247,53 +200,6 @@ namespace StoreGame_WebAPI.Controllers
             return Ok(string.Join(" ", messages));
         }
 
-        [HttpGet("GetCompletionRate/{wishlistId}")]
-        public async Task<IActionResult> GetWishlistCompletionRate(int wishlistId)
-        {
-            // Déclare une variable pour stocker le taux de complétion
-            float completionRate = 0;
-            string jeuNom = ""; // Ajouté pour stocker le nom du jeu
-
-            // Crée une nouvelle connexion SQL en utilisant la chaîne de connexion du contexte
-            using (var connection = _context.Database.GetDbConnection())
-            {
-                await connection.OpenAsync();
-                using (var command = connection.CreateCommand())
-                {
-                    // Définit la commande pour exécuter la procédure stockée
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.CommandText = "CalculateWishlistCompletionRates";
-
-                    // Ajoute les paramètres nécessaires
-                    var wishlistIdParam = new SqlParameter("@WishlistId", wishlistId);
-                    var completionRateParam = new SqlParameter("@CompletionRate", SqlDbType.Float)
-                    {
-                        Direction = ParameterDirection.Output
-                    };
-                    var jeu = await _context.Jeux.FindAsync(wishlistId);
-                    if (jeu != null)
-                    {
-                        jeuNom = jeu.NomJeu;
-                    }
-
-                    command.Parameters.Add(wishlistIdParam);
-                    command.Parameters.Add(completionRateParam);
-
-                    // Exécute la commande
-                    await command.ExecuteNonQueryAsync();
-
-                    // Récupère le taux de complétion depuis le paramètre de sortie
-                    double temp = Convert.ToDouble(completionRateParam.Value);
-                    completionRate = (float)temp;
-                }
-            }
-
-
-
-            return Ok($"Le taux de complétion pour le jeu {jeuNom} est de {completionRate}%.");
-
-        }
-
 
         //fonctionnel
         [HttpGet("GetAllGamesInWishlistWithInfos/{wishlistId}")]
@@ -303,12 +209,15 @@ namespace StoreGame_WebAPI.Controllers
             int totalGamesInAllWishlists = await _context.jeuWishlists.CountAsync();
 
             // Votre code existant pour récupérer la wishlist spécifique
-            var wishlistExists = await _context.Wishlist.AnyAsync(w => w.Id == wishlistId);
+            var wishlistExists = await _context.Wishlist
+                                          .Include(w => w.Compte)
+                                            .Where(w => w.Id == wishlistId)
+                                            .FirstOrDefaultAsync();
             if (wishlistExists == null)
             {
                 return NotFound("Wishlist not found");
             }
-
+            
             List<JeuWishlistInfoDTO> jeuxInfo = new List<JeuWishlistInfoDTO>();
 
             using (var connection = _context.Database.GetDbConnection())
@@ -341,7 +250,7 @@ namespace StoreGame_WebAPI.Controllers
                 }
             }
 
-            return Ok(jeuxInfo);
+            return Ok(new { WishlistOwner = wishlistExists.User, GamesInfo = jeuxInfo });
         }
 
         //fonctionnel
@@ -389,7 +298,7 @@ namespace StoreGame_WebAPI.Controllers
         public async Task<IActionResult> GetGameOccurrencePercentage(int jeuId)
         {
             double percentage;
-
+            int timesInWishlists;
             // Récupérer le nom du jeu à partir de la base de données
             var jeu = await _context.Jeux.FindAsync(jeuId);
             if (jeu == null)
@@ -413,20 +322,23 @@ namespace StoreGame_WebAPI.Controllers
                         SqlDbType = SqlDbType.Float,
                         Direction = ParameterDirection.Output
                     };
-
+                   
                     command.Parameters.Add(jeuIdParam);
                     command.Parameters.Add(percentageParam);
+                    
 
                     // Exécution
                     await command.ExecuteNonQueryAsync();
 
                     // Récupération de la valeur du pourcentage
                     percentage = (double)percentageParam.Value;
+                    //Recuperation  de la valeur du nombre de fois a ete ajouter a la wishlist
+                    timesInWishlists = await _context.jeuWishlists.CountAsync(jw => jw.JeuxIdJeu == jeuId);
                 }
             }
 
             // Retourner le nom du jeu et le pourcentage
-            return Ok(new { JeuNom = jeu.NomJeu, Percentage = percentage });
+            return Ok(new { JeuNom = jeu.NomJeu, Percentage = percentage , TimesInWishlists = timesInWishlists });
         }
 
 
