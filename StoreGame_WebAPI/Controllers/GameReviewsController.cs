@@ -158,9 +158,10 @@ namespace StoreGame_WebAPI.Controllers
         }
 
 
-        //GET: api/GameStore/GameReviews/Averages/5/Game
+        //GET: api/GameStore/GameReviews/game/5
+        // retrouver les gamereview pour un id de jeu spécifique
 
-        [HttpGet("Averages/{id}/Game")]
+        [HttpGet("game/{id}")]
         public async Task<ActionResult<IEnumerable<GameReviewsWithGameNameDTO>>> GetGameReviewByGame(int id)
         {
             if (!JeuExists(id))
@@ -197,8 +198,9 @@ namespace StoreGame_WebAPI.Controllers
             return Ok(gameReviewDTOs);
         }
 
-        //GET: api/GameReviews/Average/5/Game
-        [HttpGet("Average/{id}/Game")]
+        //GET: api/GameReviews/Average/5
+        //retrouver la moyenne pour un jeu specifique
+        [HttpGet("Average/{id}")]
         public IActionResult GetAverageReview(int id)
 
         {
@@ -241,6 +243,7 @@ namespace StoreGame_WebAPI.Controllers
         }
 
         //GET: api/GameReviews/Average
+        //toutes les moyenne de tous les jeux
         [HttpGet("Average")]
         public async Task<ActionResult<List<GameReviewAverageDTO>>> GetAverageReviewForEachGame()
         {
