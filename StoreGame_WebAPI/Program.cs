@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StoreGame_WebAPI.Data;
+using StoreGame_WebAPI.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<GameContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("GameContext")));
 
+
+// pour injection de dépendance du service
+builder.Services.AddScoped<GameReviewService>();
 
 builder.Services.AddControllers();
 
