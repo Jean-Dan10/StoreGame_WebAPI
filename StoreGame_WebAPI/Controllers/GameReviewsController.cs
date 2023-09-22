@@ -90,6 +90,16 @@ namespace StoreGame_WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<GameReview>> PostGameReview(GameReview gameReview)
         {
+            if (!_GRService.JeuExists(gameReview.IdJeu))
+            {
+                return Problem("L'id du jeu n'existe pas");
+            }
+
+
+            if (_GRService.checkDuplicate(gameReview.User, gameReview.IdJeu))
+            {
+                return Problem("Il y a déjà une revue pour ce jeu pour cet utilisateur");
+            }
          
 
             if (gameReview.Note < 0 || gameReview.Note > 5)
@@ -127,7 +137,7 @@ namespace StoreGame_WebAPI.Controllers
         //GET: api/GameStore/GameReviews/game/5
         // retrouver les gamereview pour un id de jeu spécifique
 
-        [HttpGet("game/{id}")]
+        [HttpGet("game/{gameId}")]
         public async Task<IActionResult> GetGameReviewByGame(int gameId)
         {
             if (!_GRService.GameReviewExists(gameId))
@@ -152,7 +162,7 @@ namespace StoreGame_WebAPI.Controllers
 
         //GET: api/GameReviews/Average/5
         //retrouver la moyenne pour un jeu specifique
-        [HttpGet("Average/{id}")]
+        [HttpGet("average/{gameId}/game")]
         public async Task<IActionResult> GetAverageReview(int gameId)
 
         {
@@ -173,14 +183,15 @@ namespace StoreGame_WebAPI.Controllers
             {
                 return NotFound("Aucun gameReview pour le jeu " + gameId);
             }
-                                
 
-            return Ok(_GRService.GetAverageReview(gameId));
+            var result = await _GRService.GetAverageReview(gameId);
+
+            return Ok(result);
         }
 
         //GET: api/GameReviews/Average
         //toutes les moyenne de tous les jeux
-        [HttpGet("Average")]
+        [HttpGet("average")]
         public async Task<ActionResult<IEnumerable<GameReviewAverageDTO>>> GetAverageReviewForEachGame()
         {
 
@@ -193,8 +204,6 @@ namespace StoreGame_WebAPI.Controllers
                      
             return Ok(gameReviewDTOs);
         }
-
-  
 
 
 

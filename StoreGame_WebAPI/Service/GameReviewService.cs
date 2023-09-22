@@ -86,7 +86,8 @@ namespace StoreGame_WebAPI.Service
 
         public async Task<bool> AddGameReview(GameReview gameReview)
         {
-            
+
+           
             _context.GameReviews.Add(gameReview);
             await _context.SaveChangesAsync();
 
@@ -126,6 +127,7 @@ namespace StoreGame_WebAPI.Service
 
             var gameReviewDTOs = gameReviews.Select(gameReview => new GameReviewDTO
             {
+                IdReview= gameReview.IdReview,
                 User = gameReview.User,
                 NomJeu = _context.Jeux.Find(id).NomJeu,
                 Commentaire = gameReview.Commentaire,
@@ -185,6 +187,13 @@ namespace StoreGame_WebAPI.Service
         public bool JeuExists(int id)
         {
             return (_context.Jeux?.Any(e => e.IdJeu == id)).GetValueOrDefault();
+        }
+
+        public bool checkDuplicate(string user, int gameId)
+        {
+            return _context.GameReviews.Any(gr => gr.User == user && gr.IdJeu == gameId);
+
+
         }
 
 
