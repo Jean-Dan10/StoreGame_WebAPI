@@ -116,7 +116,7 @@ namespace StoreGame_WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGameReview(int id)
         {
-            if (_GRService.GameReviewExists(id))
+            if (!_GRService.GameReviewExists(id))
             {
                 return NotFound("Aucune revu de jeu avec le id suivant : " + id);
             }
