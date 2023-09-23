@@ -12,6 +12,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("GameContext")));
 
 // pour injection de dépendance du service
 builder.Services.AddScoped<GameReviewService>();
+builder.Services.AddScoped<WishlistService>();
 
 builder.Services.AddControllers();
 
